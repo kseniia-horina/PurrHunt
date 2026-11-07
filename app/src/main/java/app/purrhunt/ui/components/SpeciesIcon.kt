@@ -19,7 +19,7 @@ import app.purrhunt.game.engine.Creature
 @Composable
 fun SpeciesIcon(species: Species, modifier: Modifier = Modifier, silhouette: Boolean = false, description: String? = null) {
     val creature = remember(species) { Creature(0) }
-    val paint = remember { Paint().apply { colorFilter = ColorFilter.tint(Color(0xFF0B0F17), BlendMode.SrcIn) } }
+    val paint = remember { Paint().apply { colorFilter = ColorFilter.tint(Color(0xFF3A4658), BlendMode.SrcIn) } }
     Canvas(modifier.semantics { if (description != null) contentDescription = description }) {
         val length = size.minDimension * if (species.medium == app.purrhunt.domain.Medium.AIR) 0.7f else 0.62f
         creature.reset(species, length, species.ordinal)

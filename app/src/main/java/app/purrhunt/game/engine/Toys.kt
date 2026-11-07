@@ -256,8 +256,12 @@ class FeatherToy {
 
     fun touch(w: World, px: Float, py: Float, slop: Float): Boolean {
         if (cooldown > 0f || sleeping) return false
-        val dx = px - featherX
-        val dy = py - featherY
+        // Aim at the middle of the vane, not the knot on the string.
+        val a = featherAngle
+        val cx = featherX + cos(a) * LENGTH_DP * 0.5f * w.dp
+        val cy = featherY + sin(a) * LENGTH_DP * 0.5f * w.dp
+        val dx = px - cx
+        val dy = py - cy
         val hit = sqrt(dx * dx + dy * dy) <= FEATHER_DP * w.dp + slop
         if (hit) {
             cooldown = 0.5f
@@ -273,5 +277,6 @@ class FeatherToy {
 
     companion object {
         const val FEATHER_DP = 34f
+        const val LENGTH_DP = 84f
     }
 }

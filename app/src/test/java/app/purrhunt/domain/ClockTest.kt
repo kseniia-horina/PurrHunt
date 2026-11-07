@@ -50,3 +50,14 @@ class ClockTest {
         assertEquals(6, HeatmapGrid.sum(listOf(decoded, decoded))[cells.size - 1])
     }
 }
+
+class ChartScaleTest {
+    @org.junit.Test
+    fun `nice axis maximum`() {
+        assertEquals(2f, app.purrhunt.ui.journal.niceMax(1f))
+        assertEquals(5f, app.purrhunt.ui.journal.niceMax(3f))
+        assertEquals(10f, app.purrhunt.ui.journal.niceMax(7f))
+        assertEquals(20f, app.purrhunt.ui.journal.niceMax(13f))
+        assertEquals(500f, app.purrhunt.ui.journal.niceMax(420f))
+    }
+}

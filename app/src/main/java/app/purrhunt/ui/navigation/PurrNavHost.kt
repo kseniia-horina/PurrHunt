@@ -144,7 +144,7 @@ fun PurrNavHost(startViewModel: StartViewModel, openZoo: Boolean = false, nav: N
         composable(Routes.JOURNAL) {
             JournalScreen(
                 onBack = { nav.popBackStack() },
-                onPlayLocation = { location -> nav.navigate(Routes.game(location, false, GameMode.HUNT)) },
+                onPlayLocation = { location, night -> nav.navigate(Routes.game(location, night, GameMode.HUNT)) },
             )
         }
         composable(Routes.ACHIEVEMENTS) { AchievementsScreen(onBack = { nav.popBackStack() }) }
