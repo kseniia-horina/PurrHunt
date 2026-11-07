@@ -25,9 +25,14 @@ class MainActivity : AppCompatActivity() {
         setContent {
             PurrHuntTheme {
                 Surface(color = MaterialTheme.colorScheme.background) {
-                    PurrNavHost(startViewModel)
+                    PurrNavHost(startViewModel, openZoo = BuildConfig.DEBUG && intent.getBooleanExtra(EXTRA_OPEN_ZOO, false))
                 }
             }
         }
+    }
+
+    companion object {
+        /** Debug builds: `adb shell am start -n app.purrhunt.debug/app.purrhunt.MainActivity --ez open_zoo true`. */
+        const val EXTRA_OPEN_ZOO = "open_zoo"
     }
 }

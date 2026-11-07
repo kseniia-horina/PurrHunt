@@ -28,8 +28,10 @@ fun GameSurface(
     onFrame: (Long) -> Unit,
     modifier: Modifier = Modifier,
     interactive: Boolean = true,
+    /** Below 1 shrinks the world (creatures, props) for small previews. */
+    densityScale: Float = 1f,
 ) {
-    val density = LocalDensity.current.density
+    val density = LocalDensity.current.density * densityScale
     val frame = remember { mutableLongStateOf(0L) }
     LaunchedEffect(engine) {
         engine.resetClock()

@@ -13,7 +13,7 @@ import kotlin.math.sin
  * Drives one creature through every pose of its family without the behaviour state machine,
  * so each animation can be inspected in isolation.
  */
-class ZooPuppet {
+class ZooPuppet(private val zoom: Float = 2.6f) {
     private data class Pose(
         val state: CreatureState,
         val action: Action = Action.NONE,
@@ -41,7 +41,7 @@ class ZooPuppet {
 
     fun select(species: Species, density: Float) {
         dp = density
-        creature.reset(species, species.sizeDp * dp * ZOOM, species.ordinal)
+        creature.reset(species, species.sizeDp * dp * zoom, species.ordinal)
         poses = posesFor(species.family)
         index = 0
         poseTime = 0f
@@ -49,10 +49,12 @@ class ZooPuppet {
         creature.tail.snap(creature.x, creature.y, 1f, 0f, creature.length * 0.1f)
     }
 
-    fun layout(width: Float, height: Float) {
-        cx = width / 2
-        cy = height / 2
-        radius = minOf(width, height) * 0.22f
+    fun layout(width: Float, height: Float) = place(width / 2, height / 2, minOf(width, height) * 0.22f)
+
+    fun place(centerX: Float, centerY: Float, circle: Float) {
+        cx = centerX
+        cy = centerY
+        radius = circle
     }
 
     fun update(dt: Float) {
@@ -70,7 +72,7 @@ class ZooPuppet {
         c.actionTime = poseTime
         c.age += dt
         c.blink = if ((c.age % 3.1f) < 0.15f) 0.1f else 0f
-        val speedPx = p.speed * dp * ZOOM
+        val speedPx = p.speed * dp * zoom
         c.speed = speedPx
         c.gait += dt * c.config.gaitRate * (0.25f + p.speed / c.config.walkSpeed.coerceAtLeast(1f)).coerceAtMost(4f)
         if (p.speed > 0f) {
@@ -151,9 +153,5 @@ class ZooPuppet {
         }
         base += Pose(CreatureState.CAUGHT, seconds = 1.6f)
         return base
-    }
-
-    private companion object {
-        const val ZOOM = 2.6f
     }
 }

@@ -52,7 +52,7 @@ object RodentBehavior : Behavior() {
     }
 
     private fun inside(c: Creature, spot: HidingSpot) {
-        if (spot.kind == SpotKind.BURROW) {
+        if (spot.isWallBurrow) {
             c.x = spot.x
             c.y = spot.clipLine - c.length * 0.6f
             c.clipAboveY = spot.clipLine
@@ -94,7 +94,7 @@ object RodentBehavior : Behavior() {
             CreatureState.FLEE -> {
                 val arrived = steer(c, w, dt, accel = 18f)
                 val spot = c.spot
-                if (spot != null && spot.kind == SpotKind.BURROW && c.distanceTo(spot.x, spot.y) < c.length * 1.5f) {
+                if (spot != null && spot.isWallBurrow && c.distanceTo(spot.x, spot.y) < c.length * 1.5f) {
                     c.clipAboveY = spot.clipLine
                 }
                 when {
@@ -125,7 +125,7 @@ object RodentBehavior : Behavior() {
         }
         if (c.aux2 == 0f) {
             // On the way to the shelter.
-            if (spot.kind == SpotKind.BURROW) {
+            if (spot.isWallBurrow) {
                 c.setTarget(spot.x, spot.clipLine - c.length * 0.6f)
                 if (c.distanceTo(spot.x, spot.y) < c.length * 1.5f) c.clipAboveY = spot.clipLine
             }
@@ -142,7 +142,7 @@ object RodentBehavior : Behavior() {
     private fun startPeek(c: Creature, w: World, spot: HidingSpot) {
         c.enter(CreatureState.PEEK, c.config.peekTime.sample(w.random))
         c.heading = spot.exitAngle + w.random.range(-0.4f, 0.4f)
-        if (spot.kind == SpotKind.BURROW) {
+        if (spot.isWallBurrow) {
             c.x = spot.x
             c.y = spot.clipLine - c.length * 0.15f
             c.clipAboveY = spot.clipLine

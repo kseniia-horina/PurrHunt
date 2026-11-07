@@ -20,6 +20,13 @@ interface CreatureRenderer {
 object CreatureRenderers {
     fun of(family: Family): CreatureRenderer = when (family) {
         Family.RODENT -> RodentRenderer
-        else -> RodentRenderer
+        Family.BIRD -> BirdRenderer
+        Family.BUTTERFLY -> ButterflyRenderer
+        Family.FLY -> FlyRenderer
+        Family.FIREFLY -> FireflyRenderer
+        Family.CRAWLER -> CrawlerRenderer
+        Family.CRICKET -> CricketRenderer
+        Family.FISH, Family.TADPOLE -> FishRenderer
+        Family.STRIDER -> StriderRenderer
     }
 }

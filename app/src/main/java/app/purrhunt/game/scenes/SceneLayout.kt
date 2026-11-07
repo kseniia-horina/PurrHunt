@@ -30,6 +30,9 @@ class HidingSpot(
     var clipLine: Float = Float.NaN
 
     val isShelter: Boolean get() = kind.occludes || kind == SpotKind.BURROW
+
+    /** A burrow in a wall (basement skirting): creatures inside are hidden by clipping. */
+    val isWallBurrow: Boolean get() = kind == SpotKind.BURROW && !clipLine.isNaN()
 }
 
 /** Elliptic water area; a pond scene uses one covering the whole screen. */

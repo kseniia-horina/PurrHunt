@@ -28,7 +28,10 @@ interface SceneArt {
     companion object {
         fun of(location: Location): SceneArt = when (location) {
             Location.BASEMENT -> BasementArt
-            else -> BasementArt
+            Location.GARDEN -> GardenArt
+            Location.MEADOW -> MeadowArt
+            Location.POND -> PondArt
+            Location.MIX -> MixArt
         }
     }
 }

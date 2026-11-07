@@ -1,6 +1,7 @@
 package app.purrhunt.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -66,9 +67,12 @@ class StartViewModel @Inject constructor(settings: SettingsRepository) : ViewMod
 }
 
 @Composable
-fun PurrNavHost(startViewModel: StartViewModel, nav: NavHostController = rememberNavController()) {
+fun PurrNavHost(startViewModel: StartViewModel, openZoo: Boolean = false, nav: NavHostController = rememberNavController()) {
     val start by startViewModel.startDestination.collectAsStateWithLifecycle()
     val startRoute = start ?: return
+    if (openZoo && DebugTools.zooAvailable) {
+        LaunchedEffect(Unit) { nav.navigate(Routes.ZOO) }
+    }
 
     NavHost(navController = nav, startDestination = startRoute) {
         composable(Routes.ONBOARDING) {
