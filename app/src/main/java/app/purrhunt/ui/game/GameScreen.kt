@@ -246,7 +246,7 @@ private fun ExitCornerHint(visible: Boolean, modifier: Modifier = Modifier) {
             color = Color.White.copy(alpha = 0.85f),
             style = MaterialTheme.typography.labelLarge,
             modifier = Modifier
-                .padding(top = 24.dp, end = 72.dp)
+                .padding(start = 16.dp, top = 22.dp, end = 76.dp)
                 .background(Color(0x99000000), RoundedCornerShape(12.dp))
                 .padding(horizontal = 12.dp, vertical = 8.dp)
                 .testTag("exit_hint"),

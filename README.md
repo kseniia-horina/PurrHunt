@@ -10,6 +10,26 @@ statistics.
 - Optional permissions are requested only when the matching feature is switched on:
   `CAMERA` (photo on catch, camera in video), `POST_NOTIFICATIONS` (play reminders).
 
+## Screenshots
+
+<table>
+  <tr>
+    <td align="center"><img src="docs/screenshots/basement.jpg" width="200" alt="Basement: mice and a rare white mouse among crates"><br><sub>Basement</sub></td>
+    <td align="center"><img src="docs/screenshots/garden.jpg" width="200" alt="Garden: a bullfinch and a tit at the feeders"><br><sub>Garden</sub></td>
+    <td align="center"><img src="docs/screenshots/meadow.jpg" width="200" alt="Meadow: beetles and a cricket among daisies and cornflowers"><br><sub>Meadow</sub></td>
+    <td align="center"><img src="docs/screenshots/night-meadow.jpg" width="200" alt="Night meadow: a glowing firefly"><br><sub>Night meadow</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/screenshots/pond.jpg" width="200" alt="Pond: tadpoles and a water strider between lily pads"><br><sub>Pond</sub></td>
+    <td align="center"><img src="docs/screenshots/menu.jpg" width="200" alt="Main menu with the cat profile"><br><sub>Main menu</sub></td>
+    <td align="center"><img src="docs/screenshots/locations.jpg" width="200" alt="Location list with the session length picker"><br><sub>Locations and session length</sub></td>
+    <td align="center"><img src="docs/screenshots/pause.jpg" width="200" alt="Pause menu with time left and +5 minutes"><br><sub>Owner's pause menu</sub></td>
+  </tr>
+</table>
+
+The dim circle in the top right corner of the game is the owner's dial: its arc shows the time left, and
+holding a finger on it for 3 s opens the pause menu.
+
 ## Features
 
 - **5 locations** — Basement, Garden, Meadow (with a night variant and fireflies), Pond, Mix — with
@@ -22,8 +42,12 @@ statistics.
   option, blue-green instead of red for the glowing dot.
 - **Modes**: Hunt, Feather on a rod (the owner leads it), Glowing dot.
 - **Adaptive difficulty** from accuracy over the last 30 s (−40 % … +30 %).
-- **Owner-only exit**: no buttons during play; hold the top right corner for 3 s (a ring appears after
-  1 s) or hold three fingers for 2 s. Back is swallowed, the screen is pinned, system bars are hidden.
+- **Session length**: 3, 5, 10, 15 or 20 minutes or no limit, picked right above the location list.
+  When time is up the prey goes to sleep, the lights dim and the results screen opens.
+- **Owner-only exit**: no buttons during play. A dim, static dial in the top right corner shows the time
+  left; hold a finger on it for 3 s (a ring fills after 1 s) or hold three fingers for 2 s to pause. A short
+  text hint appears when play starts. Back is swallowed, the screen is pinned, system bars are hidden.
+- **Pause menu**: time left, "+5 minutes", change location or mode, finish with results, exit to menu.
 - **Owner tools**: cat profiles with photos, hunter's journal (bestiary, charts, touch heatmap,
   favourite prey), stars, ranks, 22 achievements, play reminders, a debug zoo of every animation.
 - **Camera (optional)**: a silent front-camera photo at the moment of a catch, screen recording with the
@@ -69,13 +93,15 @@ are reproducible.
 as many fixed 1/60 s steps as needed (accumulator), then draws through `SceneRenderer`:
 cached background bitmap → animated under-layer (caustics, dust) → ripples → ground creatures →
 cached foreground bitmap (crates, bushes, lily pads hide what is behind them) → flying creatures → toys →
-paw prints → swaying grass → dusk → exit ring.
+paw prints → swaying grass → dusk → owner dial and exit ring.
 
 The renderer is an interface (`FrameRenderer`) drawing into any `DrawScope`. If a device can't keep
 50+ FPS with the Compose host, the same renderer can draw on a `SurfaceView` render thread: lock the
 surface canvas and wrap it with `CanvasDrawScope().draw(density, layoutDirection, canvas, size) { ... }`.
 
-Creatures, effects and paths are pooled and reused: the step and draw code don't allocate. Static fur and
+Creatures, effects and paths are pooled and reused: the step and draw code don't allocate. Swaying grass
+is drawn as batched line segments (one `drawLines` call per shade), and a fading creature gets an
+offscreen layer only as large as its own bounds. Static fur and
 body volume are pre-rendered into bitmaps (`SpriteCache`), so a frame draws a bitmap plus a few animated
 parts (legs, ears, tails, wings). Debug builds log the frame rate every 5 s (`adb logcat -s PurrHunt`).
 
