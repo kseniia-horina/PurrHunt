@@ -1,6 +1,7 @@
 package app.purrhunt.domain
 
-data class CaughtPrey(val species: Species, val timestamp: Long)
+/** [species] is null for toy catches (feather, glowing dot). */
+data class CaughtPrey(val species: Species?, val timestamp: Long)
 
 /** Everything the game reports when a session ends. */
 data class SessionResult(

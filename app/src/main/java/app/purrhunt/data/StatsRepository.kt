@@ -98,7 +98,7 @@ class StatsRepository @Inject constructor(
     /** Persists a finished session and returns its summary with stars and freshly unlocked achievements. */
     suspend fun saveSession(result: SessionResult): SessionSummary {
         val before = stats(result.catId)
-        val rareCount = result.catches.count { it.species.rare }
+        val rareCount = result.catches.count { it.species?.rare == true }
         val stars = Stars.earned(before.totalCatches, before.rareCatches, result.catches.size, rareCount)
         val endedAt = result.startedAt + result.durationMs
         val session = SessionEntity(
@@ -116,8 +116,8 @@ class StatsRepository @Inject constructor(
         )
         val catchRows = result.catches.map {
             CatchEntity(
-                sessionId = 0, catId = result.catId, species = it.species.name, timestamp = it.timestamp,
-                rare = it.species.rare, night = result.night, mode = result.mode.name,
+                sessionId = 0, catId = result.catId, species = it.species?.name ?: result.mode.name, timestamp = it.timestamp,
+                rare = it.species?.rare == true, night = result.night, mode = result.mode.name,
             )
         }
         val interactionRows = result.interactions.map {

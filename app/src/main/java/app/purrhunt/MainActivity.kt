@@ -5,6 +5,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import app.purrhunt.ui.navigation.PurrNavHost
 import app.purrhunt.ui.navigation.StartViewModel
@@ -22,7 +24,9 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContent {
             PurrHuntTheme {
-                PurrNavHost(startViewModel)
+                Surface(color = MaterialTheme.colorScheme.background) {
+                    PurrNavHost(startViewModel)
+                }
             }
         }
     }

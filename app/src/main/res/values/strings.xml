@@ -311,5 +311,6 @@
     <string name="zoo_title">Zoo</string>
     <string name="zoo_state">State: %s</string>
 
+    <string name="default_cat_name">Kitty</string>
     <string name="cd_paw_logo">Paw print</string>
 </resources>

@@ -287,5 +287,6 @@
     <string name="zoo_title">Зоопарк</string>
     <string name="zoo_state">Состояние: %s</string>
 
+    <string name="default_cat_name">Котик</string>
     <string name="cd_paw_logo">Отпечаток лапы</string>
 </resources>
