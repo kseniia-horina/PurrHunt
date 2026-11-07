@@ -105,15 +105,13 @@ fun PurrNavHost(startViewModel: StartViewModel, openZoo: Boolean = false, nav: N
         composable(Routes.MODES) {
             ModesScreen(
                 onBack = { nav.popBackStack() },
-                onMode = { mode ->
-                    if (mode == GameMode.HUNT) nav.navigate(Routes.locations(mode))
-                    else nav.navigate(Routes.game(Location.MEADOW, false, mode))
-                },
+                onMode = { mode -> nav.navigate(Routes.locations(mode)) },
             )
         }
         composable(Routes.LOCATIONS, arguments = listOf(navArgument("mode") { type = NavType.StringType })) { entry ->
             val mode = GameMode.valueOf(entry.arguments?.getString("mode") ?: GameMode.HUNT.name)
             LocationsScreen(
+                mode = mode,
                 onBack = { nav.popBackStack() },
                 onLocation = { location, night -> nav.navigate(Routes.game(location, night, mode)) },
             )

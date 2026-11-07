@@ -42,6 +42,7 @@ import androidx.lifecycle.viewModelScope
 import app.purrhunt.R
 import app.purrhunt.data.SettingsRepository
 import app.purrhunt.data.StatsRepository
+import app.purrhunt.domain.GameMode
 import app.purrhunt.domain.GameSettings
 import app.purrhunt.domain.Location
 import app.purrhunt.domain.NightClock
@@ -51,6 +52,7 @@ import app.purrhunt.ui.components.PurrScaffold
 import app.purrhunt.ui.components.StarRow
 import app.purrhunt.ui.components.locationDescRes
 import app.purrhunt.ui.components.locationNameRes
+import app.purrhunt.ui.components.nameRes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -92,13 +94,14 @@ class LocationsViewModel @Inject constructor(settings: SettingsRepository, stats
 
 @Composable
 fun LocationsScreen(
+    mode: GameMode,
     onBack: () -> Unit,
     onLocation: (Location, Boolean) -> Unit,
     viewModel: LocationsViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     PurrScaffold(
-        title = stringResource(R.string.locations_title),
+        title = if (mode == GameMode.HUNT) stringResource(R.string.locations_title) else stringResource(mode.nameRes),
         onBack = onBack,
         actions = { if (state.settings.starUnlock) StarRow(state.stars, Modifier.padding(end = 16.dp)) },
     ) { padding ->

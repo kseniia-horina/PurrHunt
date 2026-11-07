@@ -170,7 +170,7 @@ class FeatherToy {
         get() = kotlin.math.atan2(ys[segments - 1] - ys[segments - 2], xs[segments - 1] - xs[segments - 2])
 
     fun place(px: Float, py: Float, dp: Float) {
-        segLen = 14f * dp
+        segLen = 18f * dp
         handX = px; handY = py; tipX = px; tipY = py
         for (i in 0 until segments) {
             xs[i] = px; ys[i] = py + i * segLen

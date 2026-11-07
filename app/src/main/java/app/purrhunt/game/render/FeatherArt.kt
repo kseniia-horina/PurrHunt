@@ -50,7 +50,7 @@ object FeatherArt {
     private val quillStroke = Stroke(0.014f, cap = StrokeCap.Round)
 
     fun draw(scope: DrawScope, x: Float, y: Float, angle: Float, dp: Float, time: Float, flutter: Float, contrast: Boolean) = with(scope) {
-        val length = 64f * dp
+        val length = 84f * dp
         if (contrast) contrastHalo(x, y, length * 0.9f, 0.6f)
         val wobble = sin(time * 9f) * 4f + flutter * sin(time * 40f) * 18f
         withTransform({
