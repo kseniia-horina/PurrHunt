@@ -45,6 +45,11 @@
         </activity>
 
         <service
+            android:name=".ui.game.camera.ScreenRecordService"
+            android:exported="false"
+            android:foregroundServiceType="mediaProjection" />
+
+        <service
             android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"
             android:enabled="false"
             android:exported="false">

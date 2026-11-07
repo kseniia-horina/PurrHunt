@@ -1,6 +1,16 @@
 package app.purrhunt.ui.game
 
+import android.Manifest
+import android.app.Activity
+import android.content.pm.PackageManager
+import android.media.projection.MediaProjectionManager
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
+import app.purrhunt.ui.game.camera.CatCamera
+import app.purrhunt.ui.game.camera.ScreenRecordService
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -25,6 +35,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -63,9 +76,6 @@ fun GameScreen(
         onDispose { lifecycle.removeObserver(observer) }
     }
 
-    LaunchedEffect(ui.pinRequested) {
-        if (ui.pinRequested && activity != null) ScreenPinning.start(activity)
-    }
     DisposableEffect(activity) {
         onDispose { activity?.let { ScreenPinning.stop(it) } }
     }
@@ -81,11 +91,43 @@ fun GameScreen(
         viewModel.finish(showSummary = false, then = action)
     }
 
-    Box(Modifier.fillMaxSize().background(Color.Black)) {
-        val engine = ui.engine
+    val context = LocalContext.current
+    val cameraAllowed = ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
+    // The recording consent is a system dialog: ask for it before the screen gets pinned.
+    var recordingAnswered by remember { mutableStateOf(false) }
+    val recordLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        val data = result.data
+        if (result.resultCode == Activity.RESULT_OK && data != null) ScreenRecordService.start(context, result.resultCode, data)
+        recordingAnswered = true
+    }
+    LaunchedEffect(ui.pinRequested, ui.videoRecording, recordingAnswered) {
+        if (ui.pinRequested && (!ui.videoRecording || recordingAnswered) && activity != null) ScreenPinning.start(activity)
+    }
+    LaunchedEffect(ui.videoRecording, ui.pinRequested) {
+        if (ui.videoRecording && ui.pinRequested) {
+            recordLauncher.launch(context.getSystemService(MediaProjectionManager::class.java).createScreenCaptureIntent())
+        }
+    }
+    DisposableEffect(Unit) { onDispose { ScreenRecordService.stop(context) } }
+
+    val engine = ui.engine
+    Box(
+        Modifier
+            .fillMaxSize()
+            .background(Color.Black)
+            .then(if (engine != null && !ui.paused) Modifier.gameInput(engine) else Modifier),
+    ) {
         val renderer = ui.renderer
         if (engine != null && renderer != null) {
-            GameSurface(engine, renderer, viewModel::onFrame)
+            GameSurface(engine, renderer, viewModel::onFrame, interactive = false)
+            if (cameraAllowed && (ui.photoOnCatch || ui.videoRecording)) {
+                CatCamera(
+                    requests = viewModel.photoRequests,
+                    showPreview = ui.videoRecording,
+                    onSaved = viewModel::photoSaved,
+                    modifier = Modifier.align(Alignment.BottomStart).padding(16.dp),
+                )
+            }
         }
         if (ui.paused) {
             PauseOverlay(

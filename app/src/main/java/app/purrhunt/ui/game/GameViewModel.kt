@@ -12,6 +12,7 @@ import androidx.lifecycle.viewModelScope
 import app.purrhunt.BuildConfig
 import app.purrhunt.R
 import app.purrhunt.data.CatRepository
+import app.purrhunt.data.PhotoRepository
 import app.purrhunt.data.SettingsRepository
 import app.purrhunt.data.StatsRepository
 import app.purrhunt.domain.CatProfile
@@ -34,7 +35,9 @@ import app.purrhunt.game.render.SceneRenderer
 import app.purrhunt.game.scenes.SceneLook
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
@@ -51,6 +54,8 @@ data class GameUiState(
     val caught: Int = 0,
     val finishedSessionId: Long? = null,
     val saving: Boolean = false,
+    val photoOnCatch: Boolean = false,
+    val videoRecording: Boolean = false,
 )
 
 @HiltViewModel
@@ -61,6 +66,7 @@ class GameViewModel @Inject constructor(
     private val cats: CatRepository,
     private val stats: StatsRepository,
     private val random: GameRandom,
+    private val photos: PhotoRepository,
 ) : ViewModel(), GameEvents {
     val location: Location = Location.byName(savedState["location"] ?: Location.BASEMENT.name)
     private val requestedNight: Boolean = savedState["night"] ?: false
@@ -77,6 +83,11 @@ class GameViewModel @Inject constructor(
     private var saved = false
     private var night = false
 
+    private val _photoRequests = MutableSharedFlow<String>(extraBufferCapacity = 1)
+    /** Emits a species tag whenever the front camera should take a picture. */
+    val photoRequests: SharedFlow<String> = _photoRequests
+    private var lastPhotoAt = 0L
+
     private var loopTick = 0
     private var fpsFrames = 0
     private var fpsSince = 0L
@@ -85,7 +96,10 @@ class GameViewModel @Inject constructor(
         viewModelScope.launch {
             settings = settingsRepo.current()
             val app = settingsRepo.appState.first()
+            // Sessions and photos belong to a cat: create a default profile on the very first game.
             catId = app.currentCatId?.takeIf { cats.get(it) != null }
+                ?: cats.cats.first().firstOrNull()?.id
+                ?: cats.save(CatProfile(name = context.getString(R.string.default_cat_name), colorArgb = CatProfile.COLORS.first()))
             val now = LocalDateTime.now()
             night = NightClock.resolveNight(location, requestedNight, settings.nightMode, now.hour)
             val season = if (settings.seasons) Season.ofMonth(now.monthValue) else Season.SUMMER
@@ -112,6 +126,8 @@ class GameViewModel @Inject constructor(
                     renderer = SceneRenderer(SceneLook(night, season), settings.catContrast),
                     showLockHint = !app.lockTaskHintShown,
                     pinRequested = app.lockTaskHintShown,
+                    photoOnCatch = settings.photoOnCatch,
+                    videoRecording = settings.videoRecording,
                 )
             }
         }
@@ -206,9 +222,7 @@ class GameViewModel @Inject constructor(
     }
 
     private suspend fun saveSession(engine: GameEngine): Long {
-        val cat = catId ?: cats.save(
-            CatProfile(name = context.getString(R.string.default_cat_name), colorArgb = CatProfile.COLORS.first()),
-        ).also { catId = it }
+        val cat = catId ?: error("game started without a cat profile")
         val result = SessionResult(
             catId = cat,
             startedAt = startedAt,
@@ -233,11 +247,29 @@ class GameViewModel @Inject constructor(
 
     override fun onCatch(creature: Creature) {
         vibrate()
+        requestPhoto(creature.species.name)
+    }
+
+    /** At most one photo every 10 s, so a streak of catches doesn't fill the album. */
+    private fun requestPhoto(tag: String) {
+        val now = System.currentTimeMillis()
+        if (settings.photoOnCatch && now - lastPhotoAt >= PHOTO_INTERVAL_MS) {
+            lastPhotoAt = now
+            _photoRequests.tryEmit(tag)
+        }
+    }
+
+    fun photoSaved(path: String, tag: String) {
+        val cat = catId ?: return
+        viewModelScope.launch { photos.add(cat, path, tag) }
     }
 
     override fun onMiss(x: Float, y: Float) = Unit
 
-    override fun onToyCaught(x: Float, y: Float) = vibrate()
+    override fun onToyCaught(x: Float, y: Float) {
+        vibrate()
+        requestPhoto(mode.name)
+    }
 
     private fun vibrate() {
         val v = vibrator ?: return
@@ -261,5 +293,6 @@ class GameViewModel @Inject constructor(
         const val TAG = "PurrHunt"
         const val LOOP_UPDATE_FRAMES = 6
         const val MIN_SAVED_SECONDS = 10.0
+        const val PHOTO_INTERVAL_MS = 10_000L
     }
 }
