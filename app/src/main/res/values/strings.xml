@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">Purr Hunt</string>
+
+    <!-- Common -->
+    <string name="common_ok">OK</string>
+    <string name="common_cancel">Cancel</string>
+    <string name="common_delete">Delete</string>
+    <string name="common_back">Back</string>
+    <string name="common_save">Save</string>
+    <string name="common_on">On</string>
+    <string name="common_off">Off</string>
+
+    <!-- Onboarding -->
+    <string name="onb_title_1">How to leave the game</string>
+    <string name="onb_text_1">The game screen has no buttons, so your cat can\'t press anything. To pause, hold a finger in the top right corner for 3 seconds, or hold three fingers on the screen for 2 seconds.</string>
+    <string name="onb_title_2">Protect the screen</string>
+    <string name="onb_text_2">Claws can scratch the display. A tempered glass screen protector keeps your device safe, and trimmed claws help too.</string>
+    <string name="onb_title_3">Short hunts, happy ending</string>
+    <string name="onb_text_3">Play 5–15 minutes at a time. Finish every hunt with a real treat so your cat feels the chase ended with prey.</string>
+    <string name="onb_next">Next</string>
+    <string name="onb_start">Start</string>
+    <string name="onb_skip">Skip</string>
+
+    <!-- Main menu -->
+    <string name="menu_play">Play</string>
+    <string name="menu_modes">Modes</string>
+    <string name="menu_journal">Hunter\'s journal</string>
+    <string name="menu_achievements">Achievements</string>
+    <string name="menu_settings">Settings</string>
+    <string name="menu_cats">Cats</string>
+    <string name="menu_album">Best shots</string>
+    <string name="menu_zoo">Zoo (debug)</string>
+    <string name="menu_add_cat">Add your cat</string>
+    <string name="menu_no_cat">No cat profile yet</string>
+    <string name="menu_stars">%d ★</string>
+    <string name="menu_rank_next">%1$d more catches to “%2$s”</string>
+    <string name="menu_rank_top">Top rank reached</string>
+
+    <!-- Ranks -->
+    <string name="rank_kitten">Kitten</string>
+    <string name="rank_mouser">Mouser</string>
+    <string name="rank_yard_terror">Terror of the yard</string>
+    <string name="rank_hunter">Hunter</string>
+    <string name="rank_basement_legend">Basement legend</string>
+
+    <!-- Cats -->
+    <string name="cats_title">Cats</string>
+    <string name="cat_add">Add cat</string>
+    <string name="cat_edit">Edit cat</string>
+    <string name="cat_new">New cat</string>
+    <string name="cat_name">Name</string>
+    <string name="cat_color">Coat colour</string>
+    <string name="cat_photo_pick">Choose photo</string>
+    <string name="cat_photo_remove">Remove photo</string>
+    <string name="cat_delete_title">Delete %s?</string>
+    <string name="cat_delete_text">All statistics, achievements and photos of this cat will be deleted.</string>
+    <string name="cat_current">Current</string>
+    <string name="cat_select">Select</string>
+    <string name="cat_catches">%d catches</string>
+    <string name="cat_name_required">Enter a name</string>
+    <string name="cd_cat_avatar">Avatar of %s</string>
+    <string name="cd_color">Colour %d</string>
+
+    <!-- Locations -->
+    <string name="locations_title">Choose a location</string>
+    <string name="location_basement">Basement</string>
+    <string name="location_garden">Garden</string>
+    <string name="location_meadow">Meadow</string>
+    <string name="location_pond">Pond</string>
+    <string name="location_mix">Mix</string>
+    <string name="location_night_meadow">Night meadow</string>
+    <string name="location_desc_basement">Mice and rats among crates and burrows</string>
+    <string name="location_desc_garden">Sparrows, tits and bullfinches</string>
+    <string name="location_desc_meadow">Butterflies, flies, beetles and crickets</string>
+    <string name="location_desc_pond">Fish, tadpoles and water striders</string>
+    <string name="location_desc_mix">A bit of everything at the pond\'s edge</string>
+    <string name="location_desc_night_meadow">Fireflies glowing in the dark</string>
+    <string name="location_night_badge">Night</string>
+    <string name="location_locked">%d ★ needed</string>
+
+    <!-- Modes -->
+    <string name="modes_title">Game modes</string>
+    <string name="mode_hunt">Hunt</string>
+    <string name="mode_hunt_desc">Live prey of the chosen location</string>
+    <string name="mode_feather">Feather on a rod</string>
+    <string name="mode_feather_desc">You lead the feather with your finger, the cat catches it. Your first touch drives the feather, the cat\'s touches are catches.</string>
+    <string name="mode_laser">Glowing dot</string>
+    <string name="mode_laser_desc">A bright blue-green dot darts around by itself</string>
+
+    <!-- Pause -->
+    <string name="pause_title">Pause</string>
+    <string name="pause_resume">Continue</string>
+    <string name="pause_change_location">Change location</string>
+    <string name="pause_change_mode">Change mode</string>
+    <string name="pause_finish">Finish and see results</string>
+    <string name="pause_to_menu">Exit to menu</string>
+    <string name="pause_caught">Caught: %d</string>
+
+    <!-- Screen pinning -->
+    <string name="lock_hint_title">Screen pinning</string>
+    <string name="lock_hint_text">So your cat can\'t leave the game by accident, Purr Hunt pins the screen. Android may ask to confirm this — tap “Got it” or “Pin”. If nothing happens, turn on “App pinning” in system settings (Security → App pinning).</string>
+    <string name="lock_hint_ok">Got it</string>
+
+    <!-- Summary -->
+    <string name="summary_title">Hunt results</string>
+    <string name="summary_caught">Caught</string>
+    <string name="summary_misses">Misses</string>
+    <string name="summary_accuracy">Accuracy</string>
+    <string name="summary_duration">Duration</string>
+    <string name="summary_stars">Stars earned</string>
+    <string name="summary_rare">Rare prey!</string>
+    <string name="summary_new_achievements">New achievements</string>
+    <string name="summary_treat">Give your cat a treat so the hunt ends with real prey 🐟</string>
+    <string name="summary_nothing">No catches this time — that\'s fine, the chase is what matters.</string>
+    <string name="summary_play_again">Play again</string>
+    <string name="summary_to_menu">To menu</string>
+    <string name="duration_format">%1$d:%2$02d</string>
+    <string name="percent_format">%d%%</string>
+
+    <!-- Journal -->
+    <string name="journal_title">Hunter\'s journal</string>
+    <string name="journal_tab_bestiary">Bestiary</string>
+    <string name="journal_tab_charts">Charts</string>
+    <string name="journal_tab_heatmap">Heatmap</string>
+    <string name="journal_tab_favorite">Favourite</string>
+    <string name="bestiary_caught">Caught: %d</string>
+    <string name="bestiary_best">Best in one hunt: %d</string>
+    <string name="bestiary_unknown">Not caught yet</string>
+    <string name="bestiary_rare">Rare</string>
+    <string name="chart_catches">Catches</string>
+    <string name="chart_playtime">Play time, min</string>
+    <string name="chart_by_day">Days</string>
+    <string name="chart_by_week">Weeks</string>
+    <string name="chart_empty">No data yet. Play a hunt!</string>
+    <string name="heatmap_last">Last hunt</string>
+    <string name="heatmap_all">All time</string>
+    <string name="heatmap_caption">Where the paw lands most often</string>
+    <string name="favorite_title">Favourite prey</string>
+    <string name="favorite_none">Not enough data yet. Play a few hunts with different prey.</string>
+    <string name="favorite_rate">%.1f touches per minute near it</string>
+    <string name="favorite_hint">Try the location “%s”</string>
+    <string name="favorite_play">Play there</string>
+    <string name="journal_no_cat">Add a cat profile to keep a journal.</string>
+
+    <!-- Achievements -->
+    <string name="achievements_title">Achievements</string>
+    <string name="achievement_progress">%1$d / %2$d</string>
+    <string name="achievement_unlocked">Unlocked</string>
+    <string name="ach_first_catch">First catch</string>
+    <string name="ach_first_catch_desc">Catch any prey</string>
+    <string name="ach_ten_catches">Getting the hang of it</string>
+    <string name="ach_ten_catches_desc">Catch 10 prey</string>
+    <string name="ach_hundred_catches">Centurion</string>
+    <string name="ach_hundred_catches_desc">Catch 100 prey</string>
+    <string name="ach_thousand_catches">Thousand paws</string>
+    <string name="ach_thousand_catches_desc">Catch 1000 prey</string>
+    <string name="ach_hundred_mice">Mouse storm</string>
+    <string name="ach_hundred_mice_desc">Catch 100 mice</string>
+    <string name="ach_rat_catcher">Rat catcher</string>
+    <string name="ach_rat_catcher_desc">Catch 25 rats</string>
+    <string name="ach_bird_watcher">Bird watcher</string>
+    <string name="ach_bird_watcher_desc">Catch 50 birds</string>
+    <string name="ach_bug_hunter">Bug hunter</string>
+    <string name="ach_bug_hunter_desc">Catch 100 insects</string>
+    <string name="ach_garden_complete">Garden master</string>
+    <string name="ach_garden_complete_desc">Catch every garden bird</string>
+    <string name="ach_meadow_complete">Meadow master</string>
+    <string name="ach_meadow_complete_desc">Catch every meadow species</string>
+    <string name="ach_pond_complete">Pond master</string>
+    <string name="ach_pond_complete_desc">Catch every pond species</string>
+    <string name="ach_perfect_ten">Sharp paw</string>
+    <string name="ach_perfect_ten_desc">10 catches in a row without a miss</string>
+    <string name="ach_session_thirty">Big hunt</string>
+    <string name="ach_session_thirty_desc">30 catches in one hunt</string>
+    <string name="ach_night_hunter">Night hunter</string>
+    <string name="ach_night_hunter_desc">Catch 25 prey at night</string>
+    <string name="ach_rare_first">Lucky find</string>
+    <string name="ach_rare_first_desc">Catch rare prey</string>
+    <string name="ach_rare_collector">Rarity collector</string>
+    <string name="ach_rare_collector_desc">Catch every rare species</string>
+    <string name="ach_week_streak">Daily hunter</string>
+    <string name="ach_week_streak_desc">Play 7 days in a row</string>
+    <string name="ach_feather_fan">Feather fan</string>
+    <string name="ach_feather_fan_desc">Catch the feather 50 times</string>
+    <string name="ach_laser_chaser">Dot chaser</string>
+    <string name="ach_laser_chaser_desc">Catch the glowing dot 50 times</string>
+    <string name="ach_explorer">Explorer</string>
+    <string name="ach_explorer_desc">Hunt in every location</string>
+    <string name="ach_marathon">Marathon</string>
+    <string name="ach_marathon_desc">Play 5 hours in total</string>
+    <string name="ach_bestiary_complete">Living encyclopedia</string>
+    <string name="ach_bestiary_complete_desc">Catch every creature of the bestiary</string>
+
+    <!-- Species -->
+    <string name="species_gray_mouse">House mouse</string>
+    <string name="species_mouselet">Little mouse</string>
+    <string name="species_rat">Brown rat</string>
+    <string name="species_white_mouse">White mouse</string>
+    <string name="species_sparrow">House sparrow</string>
+    <string name="species_tit">Great tit</string>
+    <string name="species_bullfinch">Bullfinch</string>
+    <string name="species_butterfly">Peacock butterfly</string>
+    <string name="species_swallowtail">Swallowtail</string>
+    <string name="species_fly">Housefly</string>
+    <string name="species_ladybug">Ladybird</string>
+    <string name="species_beetle">Ground beetle</string>
+    <string name="species_cricket">Field cricket</string>
+    <string name="species_crucian">Crucian carp</string>
+    <string name="species_goldfish">Goldfish</string>
+    <string name="species_tadpole">Tadpole</string>
+    <string name="species_water_strider">Water strider</string>
+    <string name="species_firefly">Firefly</string>
+    <string name="species_giant_firefly">Giant firefly</string>
+
+    <string name="fact_gray_mouse">A mouse can squeeze through a gap as narrow as a pencil.</string>
+    <string name="fact_mouselet">Baby mice open their eyes about two weeks after birth.</string>
+    <string name="fact_rat">Rats laugh when tickled — in ultrasound humans can\'t hear.</string>
+    <string name="fact_white_mouse">White mice are albinos: their eyes are pink because blood vessels show through.</string>
+    <string name="fact_sparrow">Sparrows take dust baths to keep their feathers clean.</string>
+    <string name="fact_tit">A great tit knows more than 40 different calls.</string>
+    <string name="fact_bullfinch">Bullfinches come to towns in winter, which is why they are called “snow birds” in some languages.</string>
+    <string name="fact_butterfly">The eyespots on a peacock butterfly\'s wings scare off birds.</string>
+    <string name="fact_swallowtail">The swallowtail is one of the largest butterflies of Europe.</string>
+    <string name="fact_fly">A fly tastes food with its feet.</string>
+    <string name="fact_ladybug">A ladybird can eat up to 5000 aphids in its life.</string>
+    <string name="fact_beetle">Ground beetles hunt at night and run surprisingly fast.</string>
+    <string name="fact_cricket">Crickets chirp by rubbing their wings, and their ears are on their legs.</string>
+    <string name="fact_crucian">Crucian carp can survive winter in ponds with very little oxygen.</string>
+    <string name="fact_goldfish">Goldfish were bred in China from a wild carp more than a thousand years ago.</string>
+    <string name="fact_tadpole">A tadpole breathes with gills and grows legs before it becomes a frog.</string>
+    <string name="fact_water_strider">Water striders walk on water thanks to tiny water-repellent hairs on their legs.</string>
+    <string name="fact_firefly">Fireflies glow almost without heat — it is cold light.</string>
+    <string name="fact_giant_firefly">Some fireflies flash in sync, lighting up whole trees.</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_section_game">Game</string>
+    <string name="settings_section_sound">Sound and vibration</string>
+    <string name="settings_section_session">Session</string>
+    <string name="settings_section_scene">Scenes</string>
+    <string name="settings_section_reminders">Reminders</string>
+    <string name="settings_section_camera">Camera</string>
+    <string name="settings_section_other">Other</string>
+    <string name="settings_speed">Speed</string>
+    <string name="settings_speed_value">Level %d of 5</string>
+    <string name="settings_count">Creatures on screen</string>
+    <string name="settings_adaptive">Adaptive difficulty</string>
+    <string name="settings_adaptive_desc">Prey slows down when the cat misses a lot and speeds up when it is too easy</string>
+    <string name="settings_contrast">Cat contrast mode</string>
+    <string name="settings_contrast_desc">A light outline around prey makes it easier to see for cat eyes</string>
+    <string name="settings_fx_volume">Effects volume</string>
+    <string name="settings_ambient_volume">Ambience volume</string>
+    <string name="settings_stereo">Stereo panning</string>
+    <string name="settings_stereo_desc">Sounds come from the side where the creature is</string>
+    <string name="settings_vibration">Vibrate on catch</string>
+    <string name="settings_session_timer">Session length</string>
+    <string name="settings_minutes">%d min</string>
+    <string name="settings_unlimited">No limit</string>
+    <string name="settings_treat">Treat reminder after a hunt</string>
+    <string name="settings_night">Night scene</string>
+    <string name="night_auto">Auto by time of day</string>
+    <string name="night_always">Always</string>
+    <string name="night_never">Never</string>
+    <string name="settings_seasons">Seasons by date</string>
+    <string name="settings_seasons_desc">Snow in winter, fallen leaves in autumn</string>
+    <string name="settings_star_unlock">Unlock locations with stars</string>
+    <string name="settings_favorite">Favourite prey more often</string>
+    <string name="settings_favorite_desc">The species your cat reacts to most appears more often</string>
+    <string name="settings_reminders">Remind me to play</string>
+    <string name="settings_reminder_time">Time</string>
+    <string name="settings_reminder_days">Days</string>
+    <string name="settings_photo">Photo on catch</string>
+    <string name="settings_photo_desc">The front camera quietly takes a photo at the moment of a catch (no more than once in 10 s)</string>
+    <string name="settings_video">Record video</string>
+    <string name="settings_video_desc">Records the screen with the front camera in the corner. Saved to Movies/PurrHunt</string>
+    <string name="settings_language">Language</string>
+    <string name="lang_system">System</string>
+    <string name="lang_ru" translatable="false">Русский</string>
+    <string name="lang_uk" translatable="false">Українська</string>
+    <string name="lang_en" translatable="false">English</string>
+    <string name="settings_reset">Reset statistics</string>
+    <string name="settings_reset_title">Reset all statistics?</string>
+    <string name="settings_reset_text">Hunts, catches and achievements of all cats will be deleted. Cat profiles stay.</string>
+    <string name="settings_reset_done">Statistics reset</string>
+    <string name="permission_denied">Permission not granted, the feature is unavailable</string>
+
+    <string name="day_1">Mon</string>
+    <string name="day_2">Tue</string>
+    <string name="day_3">Wed</string>
+    <string name="day_4">Thu</string>
+    <string name="day_5">Fri</string>
+    <string name="day_6">Sat</string>
+    <string name="day_7">Sun</string>
+
+    <!-- Notifications -->
+    <string name="notif_channel_name">Play reminders</string>
+    <string name="notif_channel_desc">Reminders to play with your cat</string>
+    <string name="notif_title">Time to hunt!</string>
+    <string name="notif_text">%s is waiting for a game</string>
+    <string name="notif_text_generic">Your cat is waiting for a game</string>
+    <string name="notif_recording">Recording the hunt</string>
+
+    <!-- Album -->
+    <string name="album_title">Best shots</string>
+    <string name="album_empty">No photos yet. Turn on “Photo on catch” in settings.</string>
+    <string name="album_share">Share</string>
+    <string name="video_saved">Video saved to Movies/PurrHunt</string>
+
+    <!-- Debug zoo -->
+    <string name="zoo_title">Zoo</string>
+    <string name="zoo_state">State: %s</string>
+
+    <string name="cd_paw_logo">Paw print</string>
+</resources>
