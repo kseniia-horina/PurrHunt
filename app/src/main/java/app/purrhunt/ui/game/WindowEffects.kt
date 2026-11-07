@@ -3,6 +3,7 @@ package app.purrhunt.ui.game
 import android.app.Activity
 import android.app.ActivityManager
 import android.content.Context
+import android.content.pm.ActivityInfo
 import android.view.WindowManager
 import androidx.activity.compose.LocalActivity
 import androidx.compose.runtime.Composable
@@ -19,10 +20,14 @@ fun ImmersiveGameWindow() {
         val window = activity.window
         val controller = WindowCompat.getInsetsController(window, window.decorView)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        // A paw on a tilted tablet must not rotate the scene mid-hunt: keep the current orientation.
+        val orientation = activity.requestedOrientation
+        activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
         controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         controller.hide(WindowInsetsCompat.Type.systemBars())
         onDispose {
             window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            activity.requestedOrientation = orientation
             controller.show(WindowInsetsCompat.Type.systemBars())
         }
     }

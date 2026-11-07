@@ -69,6 +69,7 @@ import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 data class MenuUiState(
+    val loaded: Boolean = false,
     val cat: CatProfile? = null,
     val hasCats: Boolean = false,
     val stats: CatStats = CatStats(),
@@ -87,8 +88,8 @@ class MenuViewModel @Inject constructor(
     val state: StateFlow<MenuUiState> = combine(settings.appState.map { it.currentCatId }, cats.cats) { id, list ->
         (list.firstOrNull { it.id == id } ?: list.firstOrNull()) to list.isNotEmpty()
     }.flatMapLatest { (cat, hasCats) ->
-        if (cat == null) flowOf(MenuUiState(null, hasCats))
-        else stats.observeStats(cat.id).map { MenuUiState(cat, hasCats, it) }
+        if (cat == null) flowOf(MenuUiState(loaded = true, cat = null, hasCats = hasCats))
+        else stats.observeStats(cat.id).map { MenuUiState(loaded = true, cat = cat, hasCats = hasCats, stats = it) }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), MenuUiState())
 }
 
@@ -169,7 +170,9 @@ private fun ProfileCard(state: MenuUiState, onCats: () -> Unit, onAddCat: () -> 
             CatAvatar(cat, 64.dp)
             Spacer(Modifier.width(16.dp))
             Column(Modifier.weight(1f)) {
-                if (cat == null) {
+                if (!state.loaded) {
+                    Spacer(Modifier.height(48.dp))
+                } else if (cat == null) {
                     Text(stringResource(R.string.menu_no_cat), style = MaterialTheme.typography.titleMedium)
                     Text(stringResource(R.string.menu_add_cat), color = MaterialTheme.colorScheme.primary)
                 } else {
@@ -185,7 +188,7 @@ private fun ProfileCard(state: MenuUiState, onCats: () -> Unit, onAddCat: () -> 
                 }
             }
             if (cat != null) StarRow(state.stars)
-            else Icon(Icons.Filled.Face, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+            else if (state.loaded) Icon(Icons.Filled.Face, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
         }
     }
 }

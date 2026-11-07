@@ -6,7 +6,6 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.graphics.lerp
 import kotlin.math.PI
@@ -78,8 +77,9 @@ object RenderKit {
             return
         }
         drawOval(Color.Black.copy(alpha = 0.35f), Offset(cx - r * 1.2f, cy - r * 1.2f * open), Size(r * 2.4f, r * 2.4f * open))
+        // Wet rim: a faint light ring, drawn as a slightly larger disc under the iris.
+        drawOval(Color.White.copy(alpha = 0.22f), Offset(cx - r * 1.08f, cy - r * 1.08f * open), Size(r * 2.16f, r * 2.16f * open))
         drawOval(iris, Offset(cx - r, cy - r * open), Size(r * 2f, r * 2f * open))
-        drawOval(Color.White.copy(alpha = 0.18f), Offset(cx - r * 0.9f, cy - r * 0.9f * open), Size(r * 1.8f, r * 1.8f * open), style = Stroke(r * 0.18f))
         drawCircle(Color.White.copy(alpha = 0.9f), radius = r * 0.32f, center = Offset(cx - r * 0.3f, cy - r * 0.35f * open))
         drawCircle(Color.White.copy(alpha = 0.4f), radius = r * 0.15f, center = Offset(cx + r * 0.35f, cy + r * 0.3f * open))
     }

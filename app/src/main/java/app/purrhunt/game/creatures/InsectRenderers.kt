@@ -162,6 +162,7 @@ object FlyRenderer : CreatureRenderer {
     private val thorax = RenderKit.bodyBrush(Color(0xFF7D7A76), Color(0xFF4E4B48), Color(0xFF1F1D1B), centerX = 0.05f, centerY = -0.05f, radius = 0.2f)
     private val eyeBrush = Brush.radialGradient(listOf(Color(0xFFC0503A), Color(0xFF6E1E15)), Offset(0.26f, -0.06f), 0.1f)
     private val legColor = Color(0xFF1A1816)
+    private val veinStroke = Stroke(0.008f)
 
     override val shadowRx: Float get() = 0.32f
     override val shadowRy: Float get() = 0.22f
@@ -199,11 +200,11 @@ object FlyRenderer : CreatureRenderer {
             } else {
                 withTransform({ rotate(-12f, Offset.Zero) }) {
                     drawPath(wingPath, wingColor)
-                    drawPath(wingVeins, veinColor, style = Stroke(0.008f))
+                    drawPath(wingVeins, veinColor, style = veinStroke)
                 }
                 withTransform({ scale(1f, -1f, Offset.Zero); rotate(-12f, Offset.Zero) }) {
                     drawPath(wingPath, wingColor)
-                    drawPath(wingVeins, veinColor, style = Stroke(0.008f))
+                    drawPath(wingVeins, veinColor, style = veinStroke)
                 }
             }
         }
@@ -276,6 +277,8 @@ object CrawlerRenderer : CreatureRenderer {
             quadraticTo(-0.2f, -k * 0.05f, -0.4f, -k * 0.015f)
         }
     }
+    private val grooveStroke = Stroke(0.012f)
+    private val sheenStroke = Stroke(0.006f)
     private val ladySpots = floatArrayOf(-0.05f, -0.1f, -0.2f, -0.16f, -0.26f, -0.06f)
 
     override val shadowRx: Float get() = 0.4f
@@ -319,8 +322,8 @@ object CrawlerRenderer : CreatureRenderer {
                     if (lady) {
                         for (k in ladySpots.indices step 2) drawCircle(Color(0xFF120A08), 0.045f, Offset(ladySpots[k], ladySpots[k + 1]))
                     } else {
-                        drawPath(grooves, Color(0x66000000), style = Stroke(0.012f))
-                        drawPath(grooves, Color(0x337DA0FF), style = Stroke(0.006f))
+                        drawPath(grooves, Color(0x66000000), style = grooveStroke)
+                        drawPath(grooves, Color(0x337DA0FF), style = sheenStroke)
                     }
                 }
             }
@@ -364,6 +367,7 @@ object CricketRenderer : CreatureRenderer {
         moveTo(0.04f, 0f); lineTo(-0.4f, 0f)
     }
     private val leg = Color(0xFF241A11)
+    private val wingLineStroke = Stroke(0.008f)
 
     override val shadowRx: Float get() = 0.4f
     override val shadowRy: Float get() = 0.2f
@@ -386,7 +390,7 @@ object CricketRenderer : CreatureRenderer {
             val chirp = if (c.action == Action.CHIRP && (c.actionTime % 1.6f) < 0.5f) sin(c.age * 90f) * 0.012f else 0f
             withTransform({ translate(0f, chirp) ; scale(1f, if (chirp != 0f) 1.08f else 1f, Offset.Zero) }) {
                 drawPath(wings, Color(0xFF2A1F15))
-                drawPath(wingLines, Color(0x55C9A97A), style = Stroke(0.008f))
+                drawPath(wingLines, Color(0x55C9A97A), style = wingLineStroke)
             }
             drawOval(Color(0xFF18110B), Offset(0.12f, -0.11f), Size(0.18f, 0.22f))
             drawOval(Color(0xFF231810), Offset(0.24f, -0.09f), Size(0.14f, 0.18f))

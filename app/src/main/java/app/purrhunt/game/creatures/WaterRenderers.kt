@@ -27,6 +27,9 @@ object FishRenderer : CreatureRenderer {
     private val outline = Path()
     private val fin = Path()
     private val dorsal = Path()
+    private val rimStroke = Stroke(0.02f)
+    private val dorsalStroke = Stroke(0.03f, cap = StrokeCap.Round)
+    private val finRayStroke = Stroke(0.01f, cap = StrokeCap.Round)
 
     private class Look(val body: Brush, val back: Color, val fin: Color, val belly: Color, val width: Float, val tailSize: Float)
 
@@ -102,12 +105,12 @@ object FishRenderer : CreatureRenderer {
             outline.close()
             drawPath(outline, l.body)
             if (!isTadpole) {
-                drawPath(outline, l.belly.copy(alpha = 0.25f), style = Stroke(0.02f))
+                drawPath(outline, l.belly.copy(alpha = 0.25f), style = rimStroke)
                 dorsal.reset()
                 dorsal.moveTo(spineX[2], spineY[2])
                 for (i in 3 until N - 2) dorsal.lineTo(spineX[i], spineY[i])
-                drawPath(dorsal, l.back.copy(alpha = 0.45f), style = Stroke(0.03f, cap = StrokeCap.Round))
-                drawPath(dorsal, l.fin.copy(alpha = 0.5f), style = Stroke(0.01f, cap = StrokeCap.Round))
+                drawPath(dorsal, l.back.copy(alpha = 0.45f), style = dorsalStroke)
+                drawPath(dorsal, l.fin.copy(alpha = 0.5f), style = finRayStroke)
                 // Scale shimmer.
                 for (k in 0 until 4) {
                     val i = 3 + k * 2

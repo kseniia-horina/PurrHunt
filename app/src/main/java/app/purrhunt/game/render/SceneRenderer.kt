@@ -45,6 +45,8 @@ class SceneRenderer(
     private var sceneArt: SceneArt? = null
 
     private val layerPaint = Paint()
+    private var layerBounds = Rect.Zero
+    private var stringStroke = Stroke(1f)
     private val ringStroke = Stroke(width = 6f, cap = StrokeCap.Round)
     private val rippleStroke = Stroke(width = 2f)
     private val stringPath = Path()
@@ -103,7 +105,8 @@ class SceneRenderer(
         val faded = c.visibility < 0.98f
         if (faded) {
             layerPaint.alpha = c.visibility
-            drawContext.canvas.saveLayer(Rect(0f, 0f, size.width, size.height), layerPaint)
+            if (layerBounds.width != size.width || layerBounds.height != size.height) layerBounds = Rect(0f, 0f, size.width, size.height)
+            drawContext.canvas.saveLayer(layerBounds, layerPaint)
         }
         if (clip) {
             clipRect(top = c.clipAboveY) { creatureLayers(r, c, time) }
@@ -163,7 +166,8 @@ class SceneRenderer(
         stringPath.reset()
         stringPath.moveTo(f.xs[0], f.ys[0])
         for (i in 1 until f.segments) stringPath.lineTo(f.xs[i], f.ys[i])
-        drawPath(stringPath, Color(0xFFE6DCCB), alpha = 0.75f, style = Stroke(1.6f * world.dp))
+        if (stringStroke.width != 1.6f * world.dp) stringStroke = Stroke(1.6f * world.dp)
+        drawPath(stringPath, Color(0xFFE6DCCB), alpha = 0.75f, style = stringStroke)
         drawCircle(Color(0xFF3A3A3A), radius = 4f * world.dp, center = Offset(f.tipX, f.tipY))
         FeatherArt.draw(this, f.featherX, f.featherY, f.featherAngle, world.dp, time, f.flutter, catContrast)
     }

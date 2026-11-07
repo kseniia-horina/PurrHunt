@@ -17,7 +17,7 @@ import kotlin.math.sin
  * slip into burrows or behind crates and peek out again.
  */
 object RodentBehavior : Behavior() {
-    private val isRat = { c: Creature -> c.species == Species.RAT }
+    private fun isRat(c: Creature) = c.species == Species.RAT
 
     override fun spawn(c: Creature, w: World) {
         val spots = w.layout.spotsFor(c.species.medium)
