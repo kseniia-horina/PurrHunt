@@ -10,6 +10,8 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.graphics.lerp
+import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.graphics.toArgb
 import app.purrhunt.domain.Season
 import kotlin.math.PI
 import kotlin.math.cos
@@ -173,39 +175,88 @@ object NatureKit {
 }
 
 /**
- * Tall grass tips drawn every frame with a gentle wind sway. Blades are generated once per layout;
- * per frame only the shared paths are rebuilt (no allocation).
+ * Animated grass tips over the scene. Blades are two-segment polylines batched into one native
+ * drawLines call per shade: far cheaper than re-tessellating hundreds of curved paths every frame.
+ * Blade sets are cached per layout so several surfaces of one location (card previews, the game)
+ * don't keep regenerating each other's blades.
  */
 class SwayingGrass(private val count: Int, private val seed: Int) {
-    private var forLayout: SceneLayout? = null
-    private val xs = FloatArray(count)
-    private val ys = FloatArray(count)
-    private val lens = FloatArray(count)
-    private val angles = FloatArray(count)
-    private val shades = IntArray(count)
-    private val paths = Array(3) { Path() }
-    private var strokes = emptyArray<Stroke>()
+    private class Blades(val layout: SceneLayout, count: Int) {
+        val xs = FloatArray(count)
+        val ys = FloatArray(count)
+        val lens = FloatArray(count)
+        val angles = FloatArray(count)
+        val shades = IntArray(count)
+        var size = 0
+        val widths = FloatArray(3)
+    }
+
+    private val cache = ArrayList<Blades>(MAX_LAYOUTS)
+    /** Four floats per segment, two segments per blade, grouped by shade. */
+    private val lines = Array(3) { FloatArray(count * 8) }
+    private val fill = IntArray(3)
+    private val paints = Array(3) {
+        android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG).apply {
+            style = android.graphics.Paint.Style.STROKE
+            strokeCap = android.graphics.Paint.Cap.ROUND
+        }
+    }
 
     /** [area] must not capture anything: it is passed every frame. */
     fun DrawScope.draw(layout: SceneLayout, time: Float, colors: Array<Color>, area: (SceneLayout, Float, Float) -> Boolean) {
-        if (forLayout !== layout) generate(layout, area)
-        for (p in paths) p.reset()
-        for (i in 0 until count) {
-            val sway = sin(time * 1.3f + xs[i] * 0.004f + ys[i] * 0.002f) * 0.25f + sin(time * 3.1f + i) * 0.05f
-            val a = angles[i] + sway
-            val ex = xs[i] + cos(a) * lens[i]
-            val ey = ys[i] + sin(a) * lens[i]
-            val p = paths[shades[i]]
-            p.moveTo(xs[i], ys[i])
-            p.quadraticTo(xs[i] + cos(angles[i]) * lens[i] * 0.5f, ys[i] + sin(angles[i]) * lens[i] * 0.5f, ex, ey)
+        val b = blades(layout, area)
+        fill.fill(0)
+        for (i in 0 until b.size) {
+            val x = b.xs[i]
+            val y = b.ys[i]
+            val len = b.lens[i]
+            val base = b.angles[i]
+            val sway = sin(time * 1.3f + x * 0.004f + y * 0.002f) * 0.25f + sin(time * 3.1f + i) * 0.05f
+            val cx = x + cos(base) * len * 0.5f
+            val cy = y + sin(base) * len * 0.5f
+            val ex = x + cos(base + sway) * len
+            val ey = y + sin(base + sway) * len
+            // Midpoint of the quadratic curve start-control-end.
+            val mx = 0.25f * x + 0.5f * cx + 0.25f * ex
+            val my = 0.25f * y + 0.5f * cy + 0.25f * ey
+            val k = b.shades[i]
+            val arr = lines[k]
+            var n = fill[k]
+            arr[n++] = x; arr[n++] = y; arr[n++] = mx; arr[n++] = my
+            arr[n++] = mx; arr[n++] = my; arr[n++] = ex; arr[n++] = ey
+            fill[k] = n
         }
-        for (k in 0 until 3) drawPath(paths[k], colors[k], style = strokes[k])
+        val canvas = drawContext.canvas.nativeCanvas
+        for (k in 0 until 3) {
+            if (fill[k] == 0) continue
+            val p = paints[k]
+            p.color = colors[k].toArgb()
+            p.strokeWidth = b.widths[k]
+            canvas.drawLines(lines[k], 0, fill[k], p)
+        }
     }
 
-    private fun generate(layout: SceneLayout, area: (SceneLayout, Float, Float) -> Boolean) {
+    private fun blades(layout: SceneLayout, area: (SceneLayout, Float, Float) -> Boolean): Blades {
+        for (i in cache.indices) {
+            val b = cache[i]
+            if (b.layout === layout) {
+                if (i != 0) { cache.removeAt(i); cache.add(0, b) }
+                return b
+            }
+        }
+        val b = generate(layout, area)
+        if (cache.size >= MAX_LAYOUTS) cache.removeAt(cache.size - 1)
+        cache.add(0, b)
+        return b
+    }
+
+    private fun generate(layout: SceneLayout, area: (SceneLayout, Float, Float) -> Boolean): Blades {
+        val b = Blades(layout, count)
         val rnd = Random(seed)
         val u = layout.dp
-        strokes = arrayOf(Stroke(2.2f * u, cap = StrokeCap.Round), Stroke(1.8f * u, cap = StrokeCap.Round), Stroke(1.4f * u, cap = StrokeCap.Round))
+        b.widths[0] = 2.2f * u
+        b.widths[1] = 1.8f * u
+        b.widths[2] = 1.4f * u
         var i = 0
         var guard = 0
         while (i < count && guard++ < count * 20) {
@@ -215,13 +266,18 @@ class SwayingGrass(private val count: Int, private val seed: Int) {
             // Tall grass grows mostly near the edges so the middle stays clear for prey.
             val edge = minOf(minOf(x, layout.width - x), minOf(y, layout.height - y)) / (minOf(layout.width, layout.height) * 0.5f)
             if (rnd.nextFloat() < edge * 1.4f) continue
-            xs[i] = x
-            ys[i] = y
-            lens[i] = (14f + rnd.nextFloat() * 22f) * layout.dp
-            angles[i] = -PI.toFloat() / 2 + (rnd.nextFloat() - 0.5f) * 1.4f
-            shades[i] = rnd.nextInt(3)
+            b.xs[i] = x
+            b.ys[i] = y
+            b.lens[i] = (14f + rnd.nextFloat() * 22f) * layout.dp
+            b.angles[i] = -PI.toFloat() / 2 + (rnd.nextFloat() - 0.5f) * 1.4f
+            b.shades[i] = rnd.nextInt(3)
             i++
         }
-        forLayout = layout
+        b.size = i
+        return b
+    }
+
+    private companion object {
+        const val MAX_LAYOUTS = 4
     }
 }

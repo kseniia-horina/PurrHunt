@@ -52,6 +52,10 @@ data class GameUiState(
     val showLockHint: Boolean = false,
     val pinRequested: Boolean = false,
     val caught: Int = 0,
+    /** Seconds left in a timed session at the moment of pausing; null for unlimited sessions. */
+    val timeLeftSeconds: Int? = null,
+    /** "+5 min" is offered in the pause menu. */
+    val canExtend: Boolean = false,
     val finishedSessionId: Long? = null,
     val saving: Boolean = false,
     val photoOnCatch: Boolean = false,
@@ -123,7 +127,7 @@ class GameViewModel @Inject constructor(
             _ui.update {
                 it.copy(
                     engine = engine,
-                    renderer = SceneRenderer(SceneLook(night, season), settings.catContrast),
+                    renderer = SceneRenderer(SceneLook(night, season), settings.catContrast, ownerDial = true),
                     showLockHint = !app.lockTaskHintShown,
                     pinRequested = app.lockTaskHintShown,
                     photoOnCatch = settings.photoOnCatch,
@@ -189,12 +193,19 @@ class GameViewModel @Inject constructor(
         val engine = _ui.value.engine ?: return
         engine.paused = true
         sound?.pause()
-        _ui.update { it.copy(paused = true, caught = engine.tracker.catches) }
+        _ui.update { it.copy(paused = true, caught = engine.tracker.catches, timeLeftSeconds = engine.remainingSeconds?.toInt(), canExtend = engine.canExtend) }
     }
 
     /** The app went to the background: pause and mute. */
     fun onBackground() {
         if (_ui.value.engine != null && !_ui.value.paused) pause()
+    }
+
+    /** Adds five minutes to the hunt; the pause menu shows the new time left. */
+    fun extendSession() {
+        val engine = _ui.value.engine ?: return
+        engine.extend(EXTEND_SECONDS)
+        _ui.update { it.copy(timeLeftSeconds = engine.remainingSeconds?.toInt(), canExtend = engine.canExtend) }
     }
 
     fun resume() {
@@ -294,5 +305,6 @@ class GameViewModel @Inject constructor(
         const val LOOP_UPDATE_FRAMES = 6
         const val MIN_SAVED_SECONDS = 10.0
         const val PHOTO_INTERVAL_MS = 10_000L
+        const val EXTEND_SECONDS = 5 * 60
     }
 }

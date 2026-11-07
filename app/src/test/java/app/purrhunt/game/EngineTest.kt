@@ -185,6 +185,27 @@ class EngineTest {
         val rats = List(4000) { spawner.pick(r) }.count { it == Species.RAT }
         assertTrue("rats=$rats", rats > 2600)
     }
+
+    @Test
+    fun `extending a timed session postpones bedtime`() {
+        val e = engine(seconds = 10)
+        e.run(8f)
+        e.extend(300)
+        e.run(5f)
+        assertEquals(GameEngine.Phase.PLAYING, e.phase)
+        assertEquals(297.0, e.remainingSeconds!!, 0.1)
+        e.run(300f)
+        assertTrue(e.phase != GameEngine.Phase.PLAYING)
+        assertTrue(!e.canExtend)
+    }
+
+    @Test
+    fun `unlimited sessions cannot be extended`() {
+        val e = engine(seconds = 0)
+        assertTrue(!e.canExtend)
+        e.extend(300)
+        assertEquals(null, e.remainingSeconds)
+    }
 }
 
 class DifficultyTest {

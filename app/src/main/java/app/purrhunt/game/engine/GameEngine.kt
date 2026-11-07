@@ -50,6 +50,26 @@ class GameEngine(
     var sized = false
         private set
 
+    /** Play time at which bedtime starts; 0 = unlimited. Grows when the owner adds time. */
+    var sessionLimit = spec.sessionSeconds.toDouble()
+        private set
+
+    /** Seconds left until bedtime; null for unlimited sessions. */
+    val remainingSeconds: Double?
+        get() = if (sessionLimit > 0) (sessionLimit - playTime).coerceAtLeast(0.0) else null
+
+    /** 1 at the start of a timed session, 0 at bedtime; 1 for unlimited sessions. */
+    val remainingFraction: Float
+        get() = remainingSeconds?.let { (it / sessionLimit).toFloat() } ?: 1f
+
+    /** Whether the owner can still add time: a timed session that hasn't reached bedtime. */
+    val canExtend: Boolean get() = sessionLimit > 0 && phase == Phase.PLAYING
+
+    /** Adds [seconds] to a timed session before bedtime starts. */
+    fun extend(seconds: Int) {
+        if (canExtend) sessionLimit += seconds
+    }
+
     private var accumulator = 0f
     private var lastFrameNanos = -1L
     private var bedtimeElapsed = 0f
@@ -123,7 +143,7 @@ class GameEngine(
         }
         world.step(dt)
 
-        if (phase == Phase.PLAYING && spec.sessionSeconds > 0 && playTime >= spec.sessionSeconds) startBedtime()
+        if (phase == Phase.PLAYING && sessionLimit > 0 && playTime >= sessionLimit) startBedtime()
         if (phase == Phase.BEDTIME) {
             bedtimeElapsed += dt
             dusk = (bedtimeElapsed / DUSK_TIME).coerceAtMost(1f)

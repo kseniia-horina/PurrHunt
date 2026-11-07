@@ -86,6 +86,9 @@
     <string name="pause_finish">Завершити й переглянути підсумки</string>
     <string name="pause_to_menu">Вийти в меню</string>
     <string name="pause_caught">Упіймано: %d</string>
+    <string name="pause_time_left">Залишилось: %s</string>
+    <string name="pause_extend">+5 хвилин</string>
+    <string name="game_exit_hint">Пауза: утримуйте палець на цьому колі 3 секунди →</string>
 
     <string name="lock_hint_title">Закріплення екрана</string>
     <string name="lock_hint_text">Щоб кіт випадково не вийшов з гри, Purr Hunt закріплює екран. Android може попросити підтвердження — натисніть «OK» або «Закріпити». Якщо нічого не відбувається, увімкніть «Закріплення додатків» у налаштуваннях системи (Безпека → Закріплення додатків).</string>

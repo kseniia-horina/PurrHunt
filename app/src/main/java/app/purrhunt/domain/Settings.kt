@@ -30,7 +30,7 @@ data class GameSettings(
     val language: AppLanguage = AppLanguage.SYSTEM,
 ) {
     companion object {
-        val SESSION_OPTIONS = listOf(5, 10, 15, 20, 0)
+        val SESSION_OPTIONS = listOf(3, 5, 10, 15, 20, 0)
         const val MIN_LEVEL = 1
         const val MAX_LEVEL = 5
 

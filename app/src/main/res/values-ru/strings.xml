@@ -86,6 +86,9 @@
     <string name="pause_finish">Завершить и посмотреть итоги</string>
     <string name="pause_to_menu">Выйти в меню</string>
     <string name="pause_caught">Поймано: %d</string>
+    <string name="pause_time_left">Осталось: %s</string>
+    <string name="pause_extend">+5 минут</string>
+    <string name="game_exit_hint">Пауза: удерживайте палец на этом круге 3 секунды →</string>
 
     <string name="lock_hint_title">Закрепление экрана</string>
     <string name="lock_hint_text">Чтобы кот случайно не вышел из игры, Purr Hunt закрепляет экран. Android может попросить подтверждение — нажмите «ОК» или «Закрепить». Если ничего не происходит, включите «Закрепление приложений» в настройках системы (Безопасность → Закрепление приложений).</string>

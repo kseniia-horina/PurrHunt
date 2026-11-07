@@ -12,7 +12,12 @@ import androidx.core.content.ContextCompat
 import app.purrhunt.ui.game.camera.CatCamera
 import app.purrhunt.ui.game.camera.ScreenRecordService
 import androidx.activity.compose.LocalActivity
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.shape.RoundedCornerShape
+import kotlinx.coroutines.delay
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -120,6 +125,7 @@ fun GameScreen(
         val renderer = ui.renderer
         if (engine != null && renderer != null) {
             GameSurface(engine, renderer, viewModel::onFrame, interactive = false)
+            ExitCornerHint(visible = !ui.paused && !ui.showLockHint, modifier = Modifier.align(Alignment.TopEnd))
             if (cameraAllowed && (ui.photoOnCatch || ui.videoRecording)) {
                 CatCamera(
                     requests = viewModel.photoRequests,
@@ -132,6 +138,9 @@ fun GameScreen(
         if (ui.paused) {
             PauseOverlay(
                 caught = ui.caught,
+                timeLeftSeconds = ui.timeLeftSeconds,
+                canExtend = ui.canExtend,
+                onExtend = viewModel::extendSession,
                 onResume = viewModel::resume,
                 onChangeLocation = { leave { onChangeLocation(viewModel.mode) } },
                 onChangeMode = { leave(onChangeMode) },
@@ -158,6 +167,9 @@ fun GameScreen(
 @Composable
 private fun PauseOverlay(
     caught: Int,
+    timeLeftSeconds: Int?,
+    canExtend: Boolean,
+    onExtend: () -> Unit,
     onResume: () -> Unit,
     onChangeLocation: () -> Unit,
     onChangeMode: () -> Unit,
@@ -182,9 +194,21 @@ private fun PauseOverlay(
         ) {
             Text(stringResource(R.string.pause_title), style = MaterialTheme.typography.headlineMedium)
             Text(stringResource(R.string.pause_caught, caught), color = MaterialTheme.colorScheme.onSurfaceVariant)
+            if (timeLeftSeconds != null) {
+                Text(
+                    stringResource(R.string.pause_time_left, "%d:%02d".format(timeLeftSeconds / 60, timeLeftSeconds % 60)),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.testTag("pause_time_left"),
+                )
+            }
             Spacer(Modifier.height(8.dp))
             Button(onClick = onResume, modifier = Modifier.fillMaxWidth().height(56.dp).testTag("pause_resume")) {
                 Text(stringResource(R.string.pause_resume))
+            }
+            if (canExtend) {
+                FilledTonalButton(onClick = onExtend, modifier = Modifier.fillMaxWidth().testTag("pause_extend")) {
+                    Text(stringResource(R.string.pause_extend))
+                }
             }
             FilledTonalButton(onClick = onChangeLocation, modifier = Modifier.fillMaxWidth().testTag("pause_location")) {
                 Text(stringResource(R.string.pause_change_location))
@@ -201,3 +225,33 @@ private fun PauseOverlay(
         }
     }
 }
+
+/**
+ * Owner hint next to the exit dial, shown for a few seconds when play starts or resumes. Text only, no
+ * touch target: touches still go to the game, and a cat can't read it.
+ */
+@Composable
+private fun ExitCornerHint(visible: Boolean, modifier: Modifier = Modifier) {
+    var show by remember { mutableStateOf(false) }
+    LaunchedEffect(visible) {
+        show = visible
+        if (visible) {
+            delay(HINT_MS)
+            show = false
+        }
+    }
+    AnimatedVisibility(visible = show, enter = fadeIn(), exit = fadeOut(), modifier = modifier) {
+        Text(
+            stringResource(R.string.game_exit_hint),
+            color = Color.White.copy(alpha = 0.85f),
+            style = MaterialTheme.typography.labelLarge,
+            modifier = Modifier
+                .padding(top = 24.dp, end = 72.dp)
+                .background(Color(0x99000000), RoundedCornerShape(12.dp))
+                .padding(horizontal = 12.dp, vertical = 8.dp)
+                .testTag("exit_hint"),
+        )
+    }
+}
+
+private const val HINT_MS = 6_000L

@@ -4,6 +4,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -20,6 +23,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.AssistChip
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -59,6 +63,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import java.time.LocalTime
 import javax.inject.Inject
 
@@ -67,7 +72,12 @@ data class LocationCard(val location: Location, val night: Boolean, val unlocked
 data class LocationsUiState(val cards: List<LocationCard> = emptyList(), val stars: Int = 0, val settings: GameSettings = GameSettings())
 
 @HiltViewModel
-class LocationsViewModel @Inject constructor(settings: SettingsRepository, stats: StatsRepository) : ViewModel() {
+class LocationsViewModel @Inject constructor(private val settings: SettingsRepository, stats: StatsRepository) : ViewModel() {
+    /** The chosen length becomes the default for the next hunts too (same value as in Settings). */
+    fun setSessionMinutes(minutes: Int) {
+        viewModelScope.launch { settings.update { it.copy(sessionMinutes = minutes) } }
+    }
+
     val state: StateFlow<LocationsUiState> = combine(
         settings.settings,
         stats.observeStatsOrEmpty(settings.appState.map { it.currentCatId }),
@@ -112,6 +122,9 @@ fun LocationsScreen(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
+            item(key = "session_length", span = { GridItemSpan(maxLineSpan) }) {
+                SessionLengthPicker(state.settings.sessionMinutes, viewModel::setSessionMinutes)
+            }
             items(state.cards, key = { "${it.location}-${it.night}" }) { card ->
                 LocationCardView(card, state.settings, onClick = { if (card.unlocked) onLocation(card.location, card.night) })
             }
@@ -158,6 +171,24 @@ private fun LocationCardView(card: LocationCard, settings: GameSettings, onClick
                     stringResource(locationDescRes(card.location, card.night)),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun SessionLengthPicker(selected: Int, onSelect: (Int) -> Unit) {
+    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        Text(stringResource(R.string.settings_session_timer), style = MaterialTheme.typography.titleMedium)
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            GameSettings.SESSION_OPTIONS.forEach { m ->
+                FilterChip(
+                    selected = selected == m,
+                    onClick = { onSelect(m) },
+                    label = { Text(if (m == 0) stringResource(R.string.settings_unlimited) else stringResource(R.string.settings_minutes, m)) },
+                    modifier = Modifier.testTag("pick_session_$m"),
                 )
             }
         }

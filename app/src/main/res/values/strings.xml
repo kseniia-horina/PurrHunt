@@ -96,6 +96,9 @@
     <string name="pause_finish">Finish and see results</string>
     <string name="pause_to_menu">Exit to menu</string>
     <string name="pause_caught">Caught: %d</string>
+    <string name="pause_time_left">Time left: %s</string>
+    <string name="pause_extend">+5 minutes</string>
+    <string name="game_exit_hint">Pause: hold a finger on this circle for 3 s →</string>
 
     <!-- Screen pinning -->
     <string name="lock_hint_title">Screen pinning</string>
