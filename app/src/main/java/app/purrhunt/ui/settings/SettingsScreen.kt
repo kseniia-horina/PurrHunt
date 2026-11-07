@@ -307,7 +307,6 @@ fun SettingsScreen(onBack: () -> Unit, viewModel: SettingsViewModel = hiltViewMo
 
 private fun AppLanguage.labelRes(): Int = when (this) {
     AppLanguage.SYSTEM -> R.string.lang_system
-    AppLanguage.RU -> R.string.lang_ru
     AppLanguage.UK -> R.string.lang_uk
     AppLanguage.EN -> R.string.lang_en
 }

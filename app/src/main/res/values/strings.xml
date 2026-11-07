@@ -279,7 +279,6 @@
     <string name="settings_video_desc">Records the screen with the front camera in the corner. Saved to Movies/PurrHunt</string>
     <string name="settings_language">Language</string>
     <string name="lang_system">System</string>
-    <string name="lang_ru" translatable="false">Русский</string>
     <string name="lang_uk" translatable="false">Українська</string>
     <string name="lang_en" translatable="false">English</string>
     <string name="settings_reset">Reset statistics</string>

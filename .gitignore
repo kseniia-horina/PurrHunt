@@ -14,3 +14,4 @@
 *.log
 hs_err_pid*
 replay_pid*
+/PurrHunt_ClaudeCode_prompt.md

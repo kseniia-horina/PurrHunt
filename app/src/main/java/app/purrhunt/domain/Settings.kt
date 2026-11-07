@@ -1,6 +1,6 @@
 package app.purrhunt.domain
 
-enum class AppLanguage(val tag: String) { SYSTEM(""), RU("ru"), UK("uk"), EN("en") }
+enum class AppLanguage(val tag: String) { SYSTEM(""), UK("uk"), EN("en") }
 
 data class GameSettings(
     /** 1..5, 3 is normal. */

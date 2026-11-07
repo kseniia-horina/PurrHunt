@@ -6,7 +6,7 @@ statistics.
 
 - No ads, purchases, analytics, trackers or network access (the app does not declare `INTERNET`).
 - All graphics are drawn in code, all sounds are synthesised by a script in this repository.
-- Languages: Russian, Ukrainian, English.
+- Languages: Ukrainian, English.
 - Optional permissions are requested only when the matching feature is switched on:
   `CAMERA` (photo on catch, camera in video), `POST_NOTIFICATIONS` (play reminders).
 
@@ -94,7 +94,7 @@ parts (legs, ears, tails, wings). Debug builds log the frame rate every 5 s (`ad
    static body into a `SpriteCache`.
 6. **Sounds** — add cues to `SoundCue`, synthesise them in `tools/generate_sounds.py`, map them in
    `SoundManager.resources` and `SoundManager.cuesFor`.
-7. **Texts** — name and fact strings in `values`, `values-ru`, `values-uk`, mapped in `ui/components/Labels.kt`.
+7. **Texts** — name and fact strings in `values`, `values-uk`, mapped in `ui/components/Labels.kt`.
 8. **Check** — open the debug zoo, select the species and watch every pose; run `AllScenesTest`.
 
 ## Sounds

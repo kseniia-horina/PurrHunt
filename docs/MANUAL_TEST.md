@@ -10,7 +10,7 @@ Mark each item ✅ / ❌ and write down the device, Android version and app vers
 - [ ] Menu shows the cat profile (avatar, name, rank, stars); with no cat it offers to add one.
 - [ ] Cat profiles: add with a photo from the Photo Picker (no permission prompt), choose a colour, edit, delete with confirmation; switching the current cat switches statistics.
 - [ ] Every screen is reachable and Back returns correctly; nothing overlaps on a small phone and in landscape.
-- [ ] Language: Russian, Ukrainian, English and System switch instantly; no untranslated text.
+- [ ] Language: Ukrainian, English and System switch instantly; no untranslated text.
 - [ ] TalkBack: every button, switch, slider, avatar, bestiary card and chart is announced meaningfully.
 
 ## 2. Game, protection against leaving
